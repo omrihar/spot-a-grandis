@@ -7,6 +7,7 @@ export default {
   where: "Where did you spot the Grandis?",
   report_sighting: "Report sighting",
   picture: "Take picture",
+  upload_picture: "Upload picture",
   use_google_maps: "Select on Google Maps",
   use_gps: "Use My Current Location",
   when: 'When did you spot the grandis?',
