@@ -68,7 +68,8 @@ module.exports = function (ctx) {
 
       // Quasar plugins
       plugins: [
-        'Notify'
+        'Notify',
+        'Loading'
       ]
     },
 
@@ -115,9 +116,9 @@ module.exports = function (ctx) {
       // workboxPluginMode: 'InjectManifest',
       // workboxOptions: {}, // only for NON InjectManifest
       manifest: {
-        // name: 'Spot the Grandis',
-        // short_name: 'Spot the Grandis',
-        // description: 'An app to track the appearance of Phelsuma Grandis around the Islands.',
+        name: 'Spot a Grandis',
+        short_name: 'Spot a Grandis',
+        description: 'An app to track the appearance of Phelsuma Grandis around the Islands.',
         display: 'standalone',
         orientation: 'portrait',
         background_color: '#ffffff',
