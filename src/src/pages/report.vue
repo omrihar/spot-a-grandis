@@ -4,19 +4,18 @@
       .row
         q-btn.full-width(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
           outline color="primary" icon="camera" size="xl" @click="takePicture")
-      .row(v-if="form.imageSrc !== ''")
-        img(:src="form.imageSrc" width="100%")
+      .row(v-if="imageSrc !== ''")
+        img(:src="imageSrc" width="100%")
       .row
         h5 {{ $t('where') }}
       .row
-        q-btn-toggle(v-model="form.where" :options="whereOptions" size="md"
-          unelevated @change="checkGPS")
+        q-btn-toggle(v-model="form.where" :options="whereOptions" size="md" unelevated)
       .row.q-pt-md(v-if="form.where=='manual'")
         q-input.col-5(:label="$t('lat')" outlined type="number"
-          v-model.number="form.lat")
+          v-model.number="form.coordinates.lat")
         div.col
         q-input.col-5(:label="$t('lon')" outlined type="number"
-          v-model.number="form.lon")
+          v-model.number="form.coordinates.lng")
       .row
         h5 {{ $t('when') }}
       .row
@@ -33,9 +32,20 @@
       .row
         h5 {{ $t('how_many') }}
       .row
-        q-btn-toggle(v-model="form.count" :options="countOptions" size="lg" unelevated)
+        q-btn-toggle(v-model="form.howMany" :options="countOptions" size="lg" unelevated)
+      .row
+        h5 {{ $t('adult_or_juvenile') }}
+      .row
+        q-btn-toggle(v-model="form.age"
+           :options="form.howMany === '1' ? ageOptionsNoBoth : ageOptions" size="lg" unelevated)
+      .row
+        h5 {{ $t('comment') }}
+      .row
+        q-input.col(v-model="form.comment" filled type="textarea" :label="$t('comment')")
       .row.q-pt-xl
-        q-btn(:label="$t('send')" color="primary" size="xl")
+        q-btn(:label="$t('send')" :color="canSend ? 'primary' : 'black'" size="xl" @click="sendReport" :disable="!canSend" type="submit" :loading="sending")
+          template(v-slot:loading)
+            q-spinner-facebook
         q-btn(:label="$t('back')" color="primary" flat class="q-ml-sm"
         size="xl" to="/")
 
@@ -54,17 +64,36 @@ export default {
         {label: this.$t('two_to_five'), value: '2-5'},
         {label: this.$t('more_than_five'), value: '>5'}
       ],
+      ageOptions: [
+        {label: this.$t('adult'), value: 'adult'},
+        {label: this.$t('juvenile'), value: 'juvenile'},
+        {label: this.$t('both'), value: 'both'},
+        {label: this.$t('dunno'), value: 'dont_know'},
+      ],
+      ageOptionsNoBoth: [
+        {label: this.$t('adult'), value: 'adult'},
+        {label: this.$t('juvenile'), value: 'juvenile'},
+        {label: this.$t('dunno'), value: 'dont_know'},
+      ],
       haveLocation: false,
-      contraints: {video: true},
+      coordinates: {
+        lat: null,
+        lng: null,
+      },
+      sending: false,
+      imageSrc: '',
+      rawImage: '',
       form: {
-        lat: 0.0,
-        lon: 0.0,
-        count: '1',
+        coordinates: {
+          lat: null,
+          lng: null,
+        },
+        howMany: null,
         when: date.formatDate(new Date(), 'YYYY-MM-DD HH:mm'),
-        where: 'gps',
-        imageSrc: '',
-        fname: '',
-        rawImage: '',
+        where: null,
+        image_path: null,
+        age: null,
+        comment: null,
       },
       aws: {
         region: 'eu-central-1',
@@ -85,8 +114,10 @@ export default {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           this.haveLocation = true
-          this.form.lat = pos.coords.latitude
-          this.form.lon = pos.coords.longitude
+          this.coordinates = {lat: pos.coords.latitude, lng: pos.coords.longitude}
+          if (this.form.where === 'gps') {
+            this.form.coordinates = this.coordinates
+          }
         });
       }
     },
@@ -105,15 +136,15 @@ export default {
 
     uploadPicture () {
       let s3 = this.aws.s3
-      let fname = `images/${uid()}.jpg`
-      this.form.fname = fname
+      let image_path = `images/${uid()}.jpg`
+      this.form.image_path = image_path
       this.$q.loading.show({
         delay: 400,
         message: 'Uploading to server...'
       })
       s3.upload({
-        Key: fname,
-        Body: this.form.rawImage,
+        Key: image_path,
+        Body: this.rawImage,
         ACL: 'private',
         ContentType: 'image/jpeg;base64'
       }, (err, data) => {
@@ -123,7 +154,7 @@ export default {
           console.log(err)
         } else {
           console.log(data)
-          this.$q.notify(`Uploaded file to ${fname}`)
+          this.$q.notify(`Uploaded file to ${image_path}`)
         }
       })
     },
@@ -139,8 +170,8 @@ export default {
       }
       if (this.$q.platform.is.cordova) {
         navigator.camera.getPicture(data => {
-          this.form.imageSrc = "data:image/jpeg;base64," + data
-          this.form.rawImage = data
+          this.imageSrc = "data:image/jpeg;base64," + data
+          this.rawImage = data
           this.uploadPicture()
         }, err => {
           this.$q.notify(err)
@@ -149,19 +180,24 @@ export default {
     },
 
     setNow () {
-      this.when = date.formatDate(new Date(), 'YYYY-MM-DD HH:mm')
+      this.form.when = date.formatDate(new Date(), 'YYYY-MM-DD HH:mm')
+    },
+
+    sendReport () {
+      this.sending = true
+      if (this.form.where === "gps") {
+        this.form.coordinates = this.coordinates
+      }
+      console.log(JSON.parse(JSON.stringify(this.form)))
+      this.sending = false
+      this.$q.notify(this.$t("sent"))
     }
   },
 
   computed: {
-     hasGetUserMedia() {
-       if (this.$q.platform.is.cordova) {
-         return true
-       }
-       return !!(navigator.mediaDevices &&
-         navigator.mediaDevices.getUserMedia);
+    canSend () {
+      return this.form.where !== null && this.howMany !== null
     },
-
     whereOptions () {
       if (this.haveLocation) {
         return [
@@ -186,5 +222,8 @@ export default {
 
 .our-form .q-radio__label
   font-size: 18px;
+
+h5
+  color: teal
 
 </style>

@@ -7,7 +7,8 @@ module.exports = function (ctx) {
     // --> boot files are part of "main.js"
     boot: [
       'i18n',
-      'axios'
+      'axios',
+      'leaflet'
     ],
 
     css: [
@@ -59,6 +60,7 @@ module.exports = function (ctx) {
         'QCardSection',
         'QSeparator',
         'QCardActions',
+        'QSpinnerFacebook',
       ],
 
       directives: [
