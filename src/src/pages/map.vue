@@ -2,8 +2,11 @@
   q-page
     l-map(:center="center", :zoom="zoom" id="mymap" @update:center="c => center = c" @update:zoom="z => zoom = z")
       l-tile-layer(:url="url")
+      l-marker(:lat-lng="center" :icon="icon")
 </template>
 <script>
+
+import L from 'leaflet'
 
 export default {
    name: 'Map',
@@ -13,6 +16,11 @@ export default {
       center: [-20.250279813039555 , 57.674102783203125],
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      icon: L.icon({
+        iconUrl: 'assets/images/gecko.svg',
+        iconSize: [32, 37],
+        iconAnchor: [16, 37],
+      }),
     }
   }
 }
