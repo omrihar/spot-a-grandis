@@ -5,7 +5,7 @@
         q-btn.full-width(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
           outline color="primary" icon="camera" size="xl" @click="takePicture")
       .row(v-if="imageSrc !== ''")
-        img(:src="imageSrc" width="100%")
+        q-img(:src="imageSrc" width="100%")
       .row
         h5 {{ $t('where') }}
       .row
