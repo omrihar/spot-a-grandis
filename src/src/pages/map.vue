@@ -2,7 +2,28 @@
   q-page
     l-map(:center="center", :zoom="zoom" id="mymap" @update:center="c => center = c" @update:zoom="z => zoom = z")
       l-tile-layer(:url="url" :attribution="attribution")
-      l-marker(:lat-lng="center" :icon="icon")
+      l-marker(v-for="report in reports" :lat-lng="report.coordinates" :icon="icon")
+        l-popup(@ready="getImage(report.image_path)")
+          q-list
+            q-item(v-if="report.image_path !== null")
+              q-item-section
+                q-img(:src="image")
+            q-item
+              q-item-section
+                q-item-label(caption) {{ $t('when') }}
+                q-item-label {{ report.when }}
+            q-item
+              q-item-section
+                q-item-label(caption) {{ $t('age') }}
+                q-item-label {{ report.age }}
+            q-item
+              q-item-section
+                q-item-label(caption) {{ $t('how_many') }}
+                q-item-label {{ report.howMany }}
+            q-item(v-if="report.comment !== null")
+              q-item-section
+                q-item-label(caption) {{ $t('comment') }}
+                q-item-label {{ report.comment }}
 </template>
 <script>
 
@@ -22,6 +43,32 @@ export default {
         iconSize: [32, 37],
         iconAnchor: [16, 37],
       }),
+      imageBase: 'data:image/jpeg;base64,',
+      image: 'data:image/jpeg;base64',
+    }
+  },
+
+  mounted () {
+    this.getImage(this.reports[0].image_path)
+  },
+
+  methods: {
+    getImage(path) {
+      let s3 = this.$s3;
+      this.$q.notify(path)
+      return s3.getObject({ Key: path }, (err, data) => {
+        if (err) {
+          this.$q.notify(err)
+        } else {
+          this.image = data.Body
+        }
+      })
+    }
+  },
+
+  computed: {
+    reports () {
+      return this.$store.state.reports;
     }
   }
 }

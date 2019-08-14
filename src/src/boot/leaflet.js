@@ -1,5 +1,5 @@
 // import something here
-import { LMap, LTileLayer, LMarker, LIcon } from 'vue2-leaflet'
+import { LMap, LTileLayer, LMarker, LIcon, LPopup } from 'vue2-leaflet'
 import { Icon } from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
@@ -17,4 +17,5 @@ export default async ({ Vue }) => {
   Vue.component('l-tile-layer', LTileLayer)
   Vue.component('l-marker', LMarker)
   Vue.component('l-icon', LIcon)
+  Vue.component('l-popup', LPopup)
 }

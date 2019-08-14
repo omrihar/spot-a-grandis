@@ -1,5 +1,10 @@
 <template lang="pug">
-  q-layout(view="lHh Lpr lFf")
+  q-layout(view="hHh lpR fFf")
+    q-header(elevated class="bg-primary text-white")
+      q-toolbar
+        q-btn(dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen")
+        q-toolbar-title
+          | Spot the Grandis!
     q-drawer(v-model="leftDrawerOpen" bordered content-class="bg-grey-2")
       q-list
         q-item-label(header) Menu

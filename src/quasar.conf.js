@@ -8,7 +8,8 @@ module.exports = function (ctx) {
     boot: [
       'i18n',
       'axios',
-      'leaflet'
+      'leaflet',
+      'aws',
     ],
 
     css: [
@@ -47,6 +48,7 @@ module.exports = function (ctx) {
         'QItem',
         'QItemSection',
         'QItemLabel',
+        'QImg',
         'QForm',
         'QField',
         'QInput',
@@ -56,9 +58,11 @@ module.exports = function (ctx) {
         'QPopupProxy',
         'QRadio',
         'QDialog',
+        'QBar',
         'QCard',
         'QCardSection',
         'QSeparator',
+        'QSpace',
         'QCardActions',
         'QSpinnerFacebook',
       ],

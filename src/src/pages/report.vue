@@ -9,7 +9,8 @@
       .row
         h5 {{ $t('where') }}
       .row
-        q-btn-toggle(v-model="form.where" :options="whereOptions" size="md" unelevated)
+        q-btn-toggle(v-model="form.where" :options="whereOptions"
+          size="md" unelevated @click="changeWhere")
       .row.q-pt-md(v-if="form.where=='manual'")
         q-input.col-5(:label="$t('lat')" outlined type="number"
           v-model.number="form.coordinates.lat")
@@ -48,17 +49,45 @@
             q-spinner-facebook
         q-btn(:label="$t('back')" color="primary" flat class="q-ml-sm"
         size="xl" to="/")
+        q-dialog(v-model="showMap"
+          persistent :maximized="true" transition-show="slide-up"
+          transition-hide="slide-down"
+        )
+          q-card(class="bg-primary text-white")
+            q-bar
+              div Position the Gecko where you spotted it.
+              q-space
+              q-btn(dense flat icon="close" v-close-popup)
+            q-card-section(style="padding: 0px;")
+              l-map.fixed(:center="center", :zoom="zoom" @update:center="c => center = c" @update:zoom="z => zoom = z")
+                l-tile-layer(:url="url")
+                l-marker(:lat-lng="center" :icon="icon")
+
+            q-card-actions(style="bottom:0px; position:fixed; width:100%" clear)
+              q-bar(color="primary")
+                q-btn.q-mx-md(flat size="md" @click="selectFromMap") Select
+                q-btn(flat size="md") Cancel
 
 </template>
 
 <script>
+
 import { date, uid } from 'quasar'
-import AWS from 'aws-sdk'
+import L from 'leaflet'
 
 export default {
   name: 'Report',
   data () {
     return {
+      showMap: false,
+      center: {lat: -20.250279813039555, lng: 57.674102783203125},
+      zoom: 11,
+      url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      icon: L.icon({
+        iconUrl: 'assets/images/gecko.svg',
+        iconSize: [32, 37],
+        iconAnchor: [16, 37],
+      }),
       countOptions: [
         {label: this.$t('one_grandis'), value: '1'},
         {label: this.$t('two_to_five'), value: '2-5'},
@@ -76,6 +105,7 @@ export default {
         {label: this.$t('dunno'), value: 'dont_know'},
       ],
       haveLocation: false,
+      locationFromMap: false,
       coordinates: {
         lat: null,
         lng: null,
@@ -95,21 +125,31 @@ export default {
         age: null,
         comment: null,
       },
-      aws: {
-        region: 'eu-central-1',
-        identityPoolId: 'eu-central-1:9db6d4e1-6350-451d-abad-6fdc69fa1bd1',
-        bucket: 'spot-a-grandis',
-        s3: null,
-      }
     }
   },
 
   mounted () {
     this.checkGPS()
-    this.initializeAWS()
   },
 
   methods: {
+    changeWhere () {
+      if (this.form.where === 'gmaps') {
+        if (this.haveLocation && (!this.locationFromMap)) {
+          this.center = this.coordinates
+          this.zoom = 15
+        }
+        this.showMap = true
+      } else if (this.form.where === 'gps') {
+        this.form.coordinates = this.coordinates
+      }
+    },
+    selectFromMap () {
+      this.$q.notify("Selected location from map")
+      this.form.coordinates = this.center
+      this.locationFromMap = true
+      this.showMap = false
+    },
     checkGPS () {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
@@ -122,20 +162,8 @@ export default {
       }
     },
 
-    initializeAWS () {
-      // Initialize the Amazon Cognito credentials provider
-      AWS.config.region = this.aws.region; // Region
-      AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-          IdentityPoolId: this.aws.identityPoolId
-      })
-      this.aws.s3 = new AWS.S3({
-        apiVersion: '2006-03-01',
-        params: {Bucket: this.aws.bucket}
-      })
-    },
-
     uploadPicture () {
-      let s3 = this.aws.s3
+      let s3 = this.$s3
       let image_path = `images/${uid()}.jpg`
       this.form.image_path = image_path
       this.$q.loading.show({
@@ -144,9 +172,10 @@ export default {
       })
       s3.upload({
         Key: image_path,
-        Body: this.rawImage,
+        Body: 'base64' + this.rawImage,
         ACL: 'private',
-        ContentType: 'image/jpeg;base64'
+        ContentType: 'image/jpeg',
+        ContentEncoding: 'base64',
       }, (err, data) => {
         this.$q.loading.hide()
         if (err) {
@@ -188,9 +217,10 @@ export default {
       if (this.form.where === "gps") {
         this.form.coordinates = this.coordinates
       }
-      console.log(JSON.parse(JSON.stringify(this.form)))
+      this.$store.commit('addReport', JSON.parse(JSON.stringify(this.form)))
       this.sending = false
       this.$q.notify(this.$t("sent"))
+      this.$router.push('/map')
     }
   },
 
