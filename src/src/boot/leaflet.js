@@ -1,6 +1,7 @@
 // import something here
 import { LMap, LTileLayer, LMarker, LIcon, LPopup } from 'vue2-leaflet'
 import { Icon } from 'leaflet'
+import Vue2LeafletLocatecontrol from 'vue2-leaflet-locatecontrol'
 import 'leaflet/dist/leaflet.css'
 
 delete Icon.Default.prototype._getIconUrl
@@ -18,4 +19,5 @@ export default async ({ Vue }) => {
   Vue.component('l-marker', LMarker)
   Vue.component('l-icon', LIcon)
   Vue.component('l-popup', LPopup)
+  Vue.component('l-locatecontrol', Vue2LeafletLocatecontrol)
 }
