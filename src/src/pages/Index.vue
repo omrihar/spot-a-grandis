@@ -27,6 +27,10 @@
 
 <script>
 export default {
-  name: "PageIndex"
+  name: "PageIndex",
+
+  mounted () {
+    this.$store.dispatch('uploadReports');
+  }
 };
 </script>

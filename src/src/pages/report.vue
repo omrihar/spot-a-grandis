@@ -61,6 +61,7 @@
             q-card-section(style="padding: 0px;")
               l-map.fixed(:center="center", :zoom="zoom" @update:center="c => center = c" @update:zoom="z => zoom = z")
                 l-tile-layer(:url="url")
+                l-locatecontrol
                 l-marker(:lat-lng="center" :icon="icon")
 
             q-card-actions(style="bottom:0px; position:fixed; width:100%" clear)
@@ -84,7 +85,7 @@ export default {
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
       icon: L.icon({
-        iconUrl: 'assets/images/gecko.svg',
+        iconUrl: 'statics/gecko.svg',
         iconSize: [32, 37],
         iconAnchor: [16, 37],
       }),
@@ -170,6 +171,9 @@ export default {
         delay: 400,
         message: 'Uploading to server...'
       })
+      // Store in local storage
+      this.$q.localStorage.set(image_path, 'base64' + this.rawImage);
+
       s3.upload({
         Key: image_path,
         Body: 'base64' + this.rawImage,
@@ -183,7 +187,6 @@ export default {
           console.log(err)
         } else {
           console.log(data)
-          this.$q.notify(`Uploaded file to ${image_path}`)
         }
       })
     },
@@ -217,7 +220,7 @@ export default {
       if (this.form.where === "gps") {
         this.form.coordinates = this.coordinates
       }
-      this.$store.commit('addReport', JSON.parse(JSON.stringify(this.form)))
+      this.$store.dispatch('sendReport', JSON.parse(JSON.stringify(this.form)))
       this.sending = false
       this.$q.notify(this.$t("sent"))
       this.$router.push('/map')
@@ -247,6 +250,7 @@ export default {
 </script>
 
 <style lang="stylus">
+@import "https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css";
 .our-form
   max-width: 600px;
 

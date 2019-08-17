@@ -4611,6 +4611,11 @@ lcid@^2.0.0:
   dependencies:
     invert-kv "^2.0.0"
 
+leaflet.locatecontrol@^0.66.2:
+  version "0.66.2"
+  resolved "https://registry.yarnpkg.com/leaflet.locatecontrol/-/leaflet.locatecontrol-0.66.2.tgz#a99023b53a7b71d694b02efe4e8aeab7b1789202"
+  integrity sha512-33xCfRydyjLfh9nGvf4kSTM0tA1EFFgM0z4uj75QkUwIc9cz0vJqWABsyDirLm1GBKeEr8/krcnc10X1YuK7oA==
+
 leaflet@^1.5.1:
   version "1.5.1"
   resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.5.1.tgz#9afb9d963d66c870066b1342e7a06f92840f46bf"
@@ -7804,6 +7809,13 @@ vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
   integrity sha512-4gDntzrifFnCEvyoO8PqyJDmguXgVPxKiIxrBKjIowvL9l+N66196+72XVYR8BBf1Uv1Fgt3bGevJ+sEmxfZzw==
+
+vue2-leaflet-locatecontrol@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vue2-leaflet-locatecontrol/-/vue2-leaflet-locatecontrol-1.0.1.tgz#db97b6c4d0b0f4e37fc1487307f59f00f6e59764"
+  integrity sha512-ATGvAlRi+odc0HvrDMQJGeQiXlEUyplDwQWEs+TKvBTQfZ8WtIGQgBhgoV8216Tf0SRclcaqm6qBLOIdq5UkiA==
+  dependencies:
+    leaflet.locatecontrol "^0.66.2"
 
 vue2-leaflet@^2.1.1:
   version "2.1.1"
