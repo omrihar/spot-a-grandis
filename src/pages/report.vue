@@ -89,6 +89,11 @@ export default {
         iconSize: [32, 37],
         iconAnchor: [16, 37],
       }),
+      whereOptions: [
+        {label: this.$t('use_google_maps'), value: 'gmaps'},
+        {label: this.$t('insert_manually'), value: 'manual'},
+      ],
+
       countOptions: [
         {label: this.$t('one_grandis'), value: '1'},
         {label: this.$t('two_to_five'), value: '2-5'},
@@ -231,20 +236,6 @@ export default {
     canSend () {
       return this.form.where !== null && this.howMany !== null
     },
-    whereOptions () {
-      if (this.haveLocation) {
-        return [
-          {label: this.$t('use_gps'), value: 'gps'},
-          {label: this.$t('use_google_maps'), value: 'gmaps'},
-          {label: this.$t('insert_manually'), value: 'manual'},
-        ]
-      } else {
-        return [
-          {label: this.$t('use_google_maps'), value: 'gmaps'},
-          {label: this.$t('insert_manually'), value: 'manual'},
-        ]
-      }
-    }
   }
 }
 </script>
