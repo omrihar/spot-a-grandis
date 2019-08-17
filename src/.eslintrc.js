@@ -33,6 +33,8 @@ module.exports = {
   rules: {
     'prefer-promise-reject-errors': 'off',
 
+    'no-unused-vars': 'warn',
+
     // allow console.log during development only
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     // allow debugger during development only
