@@ -67,7 +67,7 @@
             q-card-actions(style="bottom:0px; position:fixed; width:100%" clear)
               q-bar(color="primary")
                 q-btn.q-mx-md(flat size="md" @click="selectFromMap") Select
-                q-btn(flat size="md") Cancel
+                q-btn(flat size="md" @click="cancelSelectFromMap") Cancel
 
 </template>
 
@@ -135,7 +135,7 @@ export default {
   },
 
   mounted () {
-    this.checkGPS()
+    //this.checkGPS()
   },
 
   methods: {
@@ -146,24 +146,23 @@ export default {
           this.zoom = 15
         }
         this.showMap = true
-      } else if (this.form.where === 'gps') {
-        this.form.coordinates = this.coordinates
       }
     },
     selectFromMap () {
-      this.$q.notify("Selected location from map")
-      this.form.coordinates = this.center
-      this.locationFromMap = true
-      this.showMap = false
+      this.$q.notify("Selected location from map");
+      this.form.coordinates = this.center;
+      this.locationFromMap = true;
+      this.showMap = false;
     },
+    cancelSelectFromMap () {
+      this.showMap = false;
+    },
+
     checkGPS () {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           this.haveLocation = true
           this.coordinates = {lat: pos.coords.latitude, lng: pos.coords.longitude}
-          if (this.form.where === 'gps') {
-            this.form.coordinates = this.coordinates
-          }
         });
       }
     },
@@ -222,9 +221,6 @@ export default {
 
     sendReport () {
       this.sending = true
-      if (this.form.where === "gps") {
-        this.form.coordinates = this.coordinates
-      }
       this.$store.dispatch('sendReport', JSON.parse(JSON.stringify(this.form)))
       this.sending = false
       this.$q.notify(this.$t("sent"))

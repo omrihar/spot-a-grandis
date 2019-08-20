@@ -95,7 +95,6 @@ export default function(/* { ssrContext } */) {
           if (err) {
             console.log(`Failed to send report to server! ${err}`);
           } else {
-            Notify.create('Report uploaded to server! Thank you!');
             console.log('report uploaded successfully', report.filename);
             removeFromPending(report);
             commit('markReportUploaded', report);
