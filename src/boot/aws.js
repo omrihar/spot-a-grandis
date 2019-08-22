@@ -1,9 +1,9 @@
 // import something here
 import AWS from 'aws-sdk'
 
-const region = 'eu-central-1';
-const identityPoolId = 'eu-central-1:9db6d4e1-6350-451d-abad-6fdc69fa1bd1';
-const bucket = 'spot-a-grandis';
+const region = process.env.REGION;
+const identityPoolId = process.env.IDENTITY_POOL;
+const bucket = process.env.BUCKET;
 
 AWS.config.region = region
 AWS.config.credentials = new AWS.CognitoIdentityCredentials({
