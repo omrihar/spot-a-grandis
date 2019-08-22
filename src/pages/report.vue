@@ -1,8 +1,8 @@
 <template lang="pug">
   q-page(padding id="report-page")
-    div.column.q-pa-md.our-form
+    div.col-12.q-pa-md.our-form
       .row
-        q-btn.full-width(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
+        q-btn.col-12(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
           outline color="primary" icon="camera" size="xl" @click="takePicture")
       .row(v-if="imageSrc !== ''")
         q-img(:src="imageSrc" width="100%")
@@ -10,7 +10,7 @@
         h5 {{ $t('where') }}
       .row
         q-btn-toggle(v-model="form.where" :options="whereOptions"
-          size="md" unelevated @click="changeWhere")
+          size="lg" unelevated @click="changeWhere")
       .row.q-pt-md(v-if="form.where=='manual'")
         q-input.col-5(:label="$t('lat')" outlined type="number"
           v-model.number="form.coordinates.lat")
@@ -33,12 +33,14 @@
       .row
         h5 {{ $t('how_many') }}
       .row
-        q-btn-toggle(v-model="form.howMany" :options="countOptions" size="lg" unelevated)
+        q-btn-toggle(v-model="form.howMany" :options="countOptions"
+          size="lg" unelevated)
       .row
         h5 {{ $t('adult_or_juvenile') }}
       .row
-        q-btn-toggle(v-model="form.age"
-           :options="form.howMany === '1' ? ageOptionsNoBoth : ageOptions" size="lg" unelevated)
+        q-btn-toggle.col-12(v-model="form.age"
+           :options="form.howMany === '1' ? ageOptionsNoBoth : ageOptions"
+           size="lg" unelevated spread)
       .row
         h5 {{ $t('comment') }}
       .row
