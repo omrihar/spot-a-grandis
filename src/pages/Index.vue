@@ -8,12 +8,22 @@
 </template>
 
 <style>
+
 #page {
-  background-image: url('~assets/background_vertical.png');
-  background-position: center center;
+  background-image: url('~assets/background_horizontal.png');
+  background-position: top center;
   background-repeat: no repeat;
   background-attachment: fixed;
   background-size: cover;
+}
+@media only screen and (orientation: portrait) {
+  #page {
+    background-image: url('~assets/background_vertical_scaled_smaller.png');
+    background-position: center center;
+    background-repeat: no repeat;
+    background-attachment: fixed;
+    background-size: cover;
+  }
 }
 
 #report-btn {
