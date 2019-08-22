@@ -61,13 +61,13 @@
             q-card-section(style="padding: 0px;")
               l-map.fixed(:center="center", :zoom="zoom" @update:center="c => center = c" @update:zoom="z => zoom = z")
                 l-tile-layer(:url="url")
-                l-locatecontrol
+                l-locatecontrol(:options="locationOptions")
                 l-marker(:lat-lng="center" :icon="icon")
 
             q-card-actions(style="bottom:0px; position:fixed; width:100%" clear)
               q-bar(color="primary")
                 q-btn.q-mx-md(flat size="md" @click="selectFromMap") Select
-                q-btn(flat size="md") Cancel
+                q-btn(flat size="md" @click="cancelSelectFromMap") Cancel
 
 </template>
 
@@ -84,11 +84,22 @@ export default {
       center: {lat: -20.250279813039555, lng: 57.674102783203125},
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      locationOptions: {
+        flyTo: true,
+        showPopup: false,
+        keepCurrentZoomLevel: true,
+        icon: 'fa fa-location-arrow',
+      },
       icon: L.icon({
         iconUrl: 'statics/gecko.svg',
         iconSize: [32, 37],
         iconAnchor: [16, 37],
       }),
+      whereOptions: [
+        {label: this.$t('use_google_maps'), value: 'gmaps'},
+        {label: this.$t('insert_manually'), value: 'manual'},
+      ],
+
       countOptions: [
         {label: this.$t('one_grandis'), value: '1'},
         {label: this.$t('two_to_five'), value: '2-5'},
@@ -130,7 +141,7 @@ export default {
   },
 
   mounted () {
-    this.checkGPS()
+    //this.checkGPS()
   },
 
   methods: {
@@ -141,24 +152,23 @@ export default {
           this.zoom = 15
         }
         this.showMap = true
-      } else if (this.form.where === 'gps') {
-        this.form.coordinates = this.coordinates
       }
     },
     selectFromMap () {
-      this.$q.notify("Selected location from map")
-      this.form.coordinates = this.center
-      this.locationFromMap = true
-      this.showMap = false
+      this.$q.notify("Selected location from map");
+      this.form.coordinates = this.center;
+      this.locationFromMap = true;
+      this.showMap = false;
     },
+    cancelSelectFromMap () {
+      this.showMap = false;
+    },
+
     checkGPS () {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(pos => {
           this.haveLocation = true
           this.coordinates = {lat: pos.coords.latitude, lng: pos.coords.longitude}
-          if (this.form.where === 'gps') {
-            this.form.coordinates = this.coordinates
-          }
         });
       }
     },
@@ -217,9 +227,6 @@ export default {
 
     sendReport () {
       this.sending = true
-      if (this.form.where === "gps") {
-        this.form.coordinates = this.coordinates
-      }
       this.$store.dispatch('sendReport', JSON.parse(JSON.stringify(this.form)))
       this.sending = false
       this.$q.notify(this.$t("sent"))
@@ -231,20 +238,6 @@ export default {
     canSend () {
       return this.form.where !== null && this.howMany !== null
     },
-    whereOptions () {
-      if (this.haveLocation) {
-        return [
-          {label: this.$t('use_gps'), value: 'gps'},
-          {label: this.$t('use_google_maps'), value: 'gmaps'},
-          {label: this.$t('insert_manually'), value: 'manual'},
-        ]
-      } else {
-        return [
-          {label: this.$t('use_google_maps'), value: 'gmaps'},
-          {label: this.$t('insert_manually'), value: 'manual'},
-        ]
-      }
-    }
   }
 }
 </script>
