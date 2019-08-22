@@ -24,14 +24,14 @@
               q-item-section
                 q-item-label(caption) {{ $t('comment') }}
                 q-item-label {{ report.comment }}
-      l-locatecontrol
+      l-locatecontrol(:options="locationOptions")
 </template>
 <script>
 
 import L from 'leaflet'
 
 export default {
-   name: 'Map',
+  name: 'Map',
 
   data () {
     return {
@@ -46,6 +46,12 @@ export default {
       }),
       imageBase: 'data:image/jpeg;base64,',
       image: 'data:image/jpeg;base64',
+      locationOptions: {
+        flyTo: true,
+        showPopup: false,
+        keepCurrentZoomLevel: false,
+        icon: 'fa fa-location-arrow',
+      }
     }
   },
 

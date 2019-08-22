@@ -61,7 +61,7 @@
             q-card-section(style="padding: 0px;")
               l-map.fixed(:center="center", :zoom="zoom" @update:center="c => center = c" @update:zoom="z => zoom = z")
                 l-tile-layer(:url="url")
-                l-locatecontrol
+                l-locatecontrol(:options="locationOptions")
                 l-marker(:lat-lng="center" :icon="icon")
 
             q-card-actions(style="bottom:0px; position:fixed; width:100%" clear)
@@ -84,6 +84,12 @@ export default {
       center: {lat: -20.250279813039555, lng: 57.674102783203125},
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
+      locationOptions: {
+        flyTo: true,
+        showPopup: false,
+        keepCurrentZoomLevel: true,
+        icon: 'fa fa-location-arrow',
+      },
       icon: L.icon({
         iconUrl: 'statics/gecko.svg',
         iconSize: [32, 37],
