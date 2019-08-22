@@ -1,16 +1,19 @@
 <template lang="pug">
-  q-page(padding id="report-page")
+  q-page(padding id="report-page" class="bg-grey-10 text-white")
     div.col-12.q-pa-md.our-form
       .row
-        q-btn.col-12(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
-          outline color="primary" icon="camera" size="xl" @click="takePicture")
+        q-btn.col-12.my-custom-toggle(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
+           color="primary" icon="camera" size="xl" @click="takePicture")
       .row(v-if="imageSrc !== ''")
         q-img(:src="imageSrc" width="100%")
       .row
         h5 {{ $t('where') }}
       .row
-        q-btn-toggle(v-model="form.where" :options="whereOptions"
-          size="lg" unelevated @click="changeWhere")
+        q-btn-toggle.my-custom-toggle(v-model="form.where" :options="whereOptions"
+          size="lg"  @click="changeWhere" unelevated
+          text-color="lightgrey" color="lightgrey"
+          toggle-color="primary"
+          )
       .row.q-pt-md(v-if="form.where=='manual'")
         q-input.col-5(:label="$t('lat')" outlined type="number"
           v-model.number="form.coordinates.lat")
@@ -20,7 +23,7 @@
       .row
         h5 {{ $t('when') }}
       .row
-        q-input(filled v-model="form.when")
+        q-input(filled v-model="form.when" dark)
           template(v-slot:prepend="")
             q-icon.cursor-pointer(name="event")
               q-popup-proxy(transition-show="scale" transition-hide="scale")
@@ -29,24 +32,26 @@
             q-icon.cursor-pointer(name="access_time")
               q-popup-proxy(transition-show="scale" transition-hide="scale")
                 q-time(v-model="form.when" mask="YYYY-MM-DD HH:mm" format24h)
-        q-btn.q-ml-md(:label="$t('now')" outline color="primary" @click="setNow")
+        q-btn.q-ml-md.my-custom-toggle(:label="$t('now')" outline color="lightgrey" @click="setNow")
       .row
         h5 {{ $t('how_many') }}
       .row
-        q-btn-toggle(v-model="form.howMany" :options="countOptions"
-          size="lg" unelevated)
+        q-btn-toggle.my-custom-toggle.col-12(v-model="form.howMany" :options="countOptions"
+          size="lg" unelevated text-color="lightgrey" color="lightgrey" spread)
       .row
         h5 {{ $t('adult_or_juvenile') }}
       .row
-        q-btn-toggle.col-12(v-model="form.age"
+        q-btn-toggle.col-12.my-custom-toggle(v-model="form.age"
            :options="form.howMany === '1' ? ageOptionsNoBoth : ageOptions"
-           size="lg" unelevated spread)
+           size="lg" unelevated spread text-color="lightgrey" color="lightgrey")
       .row
         h5 {{ $t('comment') }}
       .row
-        q-input.col(v-model="form.comment" filled type="textarea" :label="$t('comment')")
+        q-input.col(v-model="form.comment" dark filled type="textarea" :label="$t('comment')")
       .row.q-pt-xl
-        q-btn(:label="$t('send')" :color="canSend ? 'primary' : 'black'" size="xl" @click="sendReport" :disable="!canSend" type="submit" :loading="sending")
+        q-btn(:label="$t('send')" :color="canSend ? 'primary' : 'black'"
+          size="xl" @click="sendReport" :disable="!canSend" type="submit"
+          :loading="sending" icon="send")
           template(v-slot:loading)
             q-spinner-facebook
         q-btn(:label="$t('back')" color="primary" flat class="q-ml-sm"
@@ -252,7 +257,10 @@ export default {
 .our-form .q-radio__label
   font-size: 18px;
 
+.my-custom-toggle
+  border: 1px solid #60c22b
+
 h5
-  color: teal
+  color: lightgray;
 
 </style>

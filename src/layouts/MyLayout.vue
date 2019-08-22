@@ -5,8 +5,8 @@
         q-btn(dense flat round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen")
         q-toolbar-title
           | Spot the Grandis!
-    q-drawer(v-model="leftDrawerOpen" bordered content-class="bg-grey-2")
-      q-list
+    q-drawer(v-model="leftDrawerOpen"  content-class="bg-grey-9")
+      q-list(dark)
         q-item-label(header) Menu
 
         q-item(clickable tag="a" to="/")
@@ -28,6 +28,13 @@
           q-item-section
             q-item-label View Map
             q-item-label(caption) See map with known sightings
+
+        q-item(clickable tag="a" to="/about")
+          q-item-section(avatar)
+            q-icon(name="info")
+          q-item-section
+            q-item-label About
+            q-item-label(caption) About the app
 
     q-page-container
       router-view
