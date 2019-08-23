@@ -1,0 +1,10 @@
+image: "node:11.1-alpine"
+
+before_script:
+    - yarn global add @quasar/cli
+    - yarn
+    - touch .env
+
+build:
+    script:
+        - quasar build
