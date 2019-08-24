@@ -1,4 +1,4 @@
-image: "vgaidarji/docker-android-cordova"
+image: "vgaidarji/docker-android-cordova:latest"
 
 before_script:
     - yarn global add @quasar/cli
