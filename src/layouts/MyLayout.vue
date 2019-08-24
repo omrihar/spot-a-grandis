@@ -20,7 +20,7 @@
             q-icon( name="send")
           q-item-section
             q-item-label Report
-            q-item-label(caption) Report a new sighting<
+            q-item-label(caption) Report a new sighting
 
         q-item(clickable tag="a" to="/map")
           q-item-section(avatar)

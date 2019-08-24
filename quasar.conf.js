@@ -65,6 +65,8 @@ module.exports = function (ctx) {
         'QSpace',
         'QCardActions',
         'QSpinnerFacebook',
+        'QTimeline',
+        'QTimelineEntry',
       ],
 
       directives: [
