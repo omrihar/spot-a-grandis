@@ -56,13 +56,24 @@
           Please help us to protect endemic geckos! If you see a Phelsuma grandis, report
           your observations here!
 
+      q-timeline-entry(title="Attributions")
+        ul
+          li
+            |Gecko icon made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>.
+          li
+            |Map tiles &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors.
+
+
 </template>
 
 <script>
 export default {
-  // name: 'PageName',
+   name: 'About',
 }
 </script>
 
-<style>
+<style lang="stylus">
+li a {
+  color: $primary
+}
 </style>

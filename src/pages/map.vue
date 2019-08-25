@@ -38,7 +38,7 @@ export default {
       center: [-20.250279813039555 , 57.674102783203125],
       zoom: 11,
       url: 'http://{s}.tile.osm.org/{z}/{x}/{y}.png',
-      attribution: 'Icons made by <a href="https://www.flaticon.com/authors/smashicons" title="Smashicons">Smashicons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a>',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
       icon: L.icon({
         iconUrl: 'statics/gecko.svg',
         iconSize: [32, 37],
