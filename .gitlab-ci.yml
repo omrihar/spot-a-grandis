@@ -1,23 +1,10 @@
-image: "omrihar/docker-android-cordova-quasar:latest"
+image: "node:11.1-alpine"
 
 before_script:
+    - yarn global add @quasar/cli
     - yarn
     - touch .env
 
-cache:
-    key: global-quasar-and-gradle
-    paths:
-        - node_modules/
-        - src_cordova/node_modules/
-
 build:
     script:
-        - quasar build -m cordova -T android --skip-pkg
-        - cd src_cordova
-        - cordova build android --prod
-
-    artifacts:
-        paths:
-            - src-cordova/platforms/android/app/build/outputs/apk/debug/app-debug.apk
-        expire_in: 1 week
-
+        - quasar build
