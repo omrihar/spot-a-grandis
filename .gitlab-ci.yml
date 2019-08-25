@@ -1,7 +1,6 @@
-image: "vgaidarji/docker-android-cordova:latest"
+image: "omrihar/docker-android-cordova-quasar:latest"
 
 before_script:
-    - yarn global add @quasar/cli
     - yarn
     - touch .env
 
