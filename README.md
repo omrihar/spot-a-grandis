@@ -49,3 +49,55 @@ in order to effectively protect them, we need to know if and where they are
 particularly threatened. Only then can countermeasures be planned effectively. 
 Please help us to protect endemic geckos! If you see a Phelsuma grandis, report 
 your observations here!
+
+
+# Building this project
+
+## Building for local development
+
+This project is based on the [Quasar framework](https://quasar.dev).
+To start working on the project, first install the quasar cli tool:
+```bash
+yarn global add @quasar/cli
+```
+
+then clone the repository:
+
+```bash
+git clone https://github.com/omrihar/spot-a-grandis.git
+cd spot-a-grandis
+
+```
+
+Mostly the development is done on the `develop` branch, so switch to it to get
+the latest development version:
+
+```bash
+git checkout develop
+```
+
+To start the dev server, simply run
+
+```bash
+quasar dev
+```
+
+To compile the android app you'll need to follow instructions on the quasar
+website to install and configure cordova. Then you can use
+
+```
+quasar dev -m cordova -T android
+```
+
+while your phone is connected to your computer.
+
+To get an apk you can install on your phone, run:
+
+```bash
+quasar build -m cordova -T android --skip-pkg
+cd src-cordova
+cordova build android --prod
+```
+
+
+Happy hacking!
