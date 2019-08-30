@@ -6,6 +6,9 @@
            color="primary" icon="camera" size="xl" @click="takePicture")
       .row(v-if="imageSrc !== ''")
         q-img(:src="imageSrc" width="100%")
+          div.absolute-bottom.text-subtitle.text-center.q-pa-xs
+            q-btn(@click="removePictue") Remove
+
       .row
         h5 {{ $t('where') }}
       .row
@@ -132,6 +135,7 @@ export default {
       sending: false,
       imageSrc: '',
       rawImage: '',
+      savedImage: false,
       form: {
         coordinates: {
           lat: null,
@@ -180,16 +184,34 @@ export default {
       }
     },
 
-    uploadPicture () {
-      let s3 = this.$s3
-      let image_path = `images/${uid()}.jpg`
-      this.form.image_path = image_path
-      this.$q.loading.show({
-        delay: 400,
-        message: 'Uploading to server...'
-      })
+    savePicture () {
+      let image_path = `images/${uid()}.jpg`;
+      this.form.image_path = image_path;
+
       // Store in local storage
       this.$q.localStorage.set(image_path, 'base64' + this.rawImage);
+      this.savedImage = true;
+    },
+
+    removePictue () {
+      let image_path = this.form.image_path;
+      this.form.image_path = '';
+      this.rawImage = '';
+      this.imageSrc = '';
+      this.savedImage = false;
+      this.$q.localStorage.remove(image_path);
+    },
+
+    uploadPicture () {
+      if (!this.savedImage) {
+        return;
+      }
+      let s3 = this.$s3;
+      let image_path = this.form.image_path;
+      this.$q.loading.show({
+        delay: 400,
+        message: 'Uploading image to server...'
+      });
 
       s3.upload({
         Key: image_path,
@@ -205,7 +227,7 @@ export default {
         } else {
           console.log(data)
         }
-      })
+      });
     },
 
     takePicture () {
@@ -221,7 +243,7 @@ export default {
         navigator.camera.getPicture(data => {
           this.imageSrc = "data:image/jpeg;base64," + data
           this.rawImage = data
-          this.uploadPicture()
+          this.savePicture()
         }, err => {
           this.$q.notify(err)
         }, options)
@@ -237,6 +259,7 @@ export default {
       this.$store.dispatch('sendReport', JSON.parse(JSON.stringify(this.form)))
       this.sending = false
       this.$q.notify(this.$t("sent"))
+      this.uploadPicture()
       this.$router.push('/map')
     }
   },
