@@ -2,8 +2,11 @@
   q-page(padding id="report-page" class="bg-grey-10 text-white")
     div.col-12.q-pa-md.our-form
       .row
-        q-btn.col-12.my-custom-toggle(:label="$q.platform.is.cordova ? $t('picture') : $t('upload_picture')"
-           color="primary" icon="camera" size="xl" @click="takePicture")
+        q-btn.col-5.my-custom-toggle(:label="$t('picture')"
+           color="primary" icon="photo_camera" size="xl" @click="takePicture")
+        .col
+        q-btn.col-5.my-custom-toggle(:label="$t('upload_picture')"
+           color="primary" icon="camera" size="xl" @click="choosePicture")
       .row(v-if="imageSrc !== ''")
         q-img(:src="imageSrc" width="100%")
           div.absolute-bottom.text-subtitle.text-center.q-pa-xs
@@ -233,7 +236,7 @@ export default {
     takePicture () {
       let options = {
         quality: 30,
-        allowEdit: false,
+        allowEdit: true,
         correctOrientation: true,
         saveToPhotoAlbum: true,
         sourceType: window.Camera.PictureSourceType.CAMERA,
@@ -248,6 +251,27 @@ export default {
           this.$q.notify(err)
         }, options)
       }
+    },
+
+    choosePicture () {
+      let options = {
+        quality: 30,
+        allowEdit: true,
+        correctOrientation: true,
+        saveToPhotoAlbum: true,
+        sourceType: window.Camera.PictureSourceType.PHOTOLIBRARY,
+        destinationType: window.Camera.DestinationType.DATA_URL,
+      }
+      if (this.$q.platform.is.cordova) {
+        navigator.camera.getPicture(data => {
+          this.imageSrc = "data:image/jpeg;base64," + data
+          this.rawImage = data
+          this.savePicture()
+        }, err => {
+          this.$q.notify(err)
+        }, options)
+      }
+
     },
 
     setNow () {
