@@ -38,5 +38,10 @@
   },
   "browserslist": [
     "last 1 version, not dead, ie >= 11"
-  ]
+  ],
+  "scripts": {
+    "dev": "quasar dev",
+    "build": "quasar build",
+    "build:android": "quasar build -m cordova -T android"
+  }
 }
