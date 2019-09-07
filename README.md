@@ -1,4 +1,4 @@
-![](https://github.com/omrihar/spot-a-grandis/workflows/quasar/badge.svg)
+![](https://github.com/omrihar/spot-a-grandis/workflows/Quasar%20Build/badge.svg)
 
 # Spot a Grandis
 
