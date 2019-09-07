@@ -1,3 +1,5 @@
+![](https://github.com/omrihar/spot-a-grandis/workflows/quasar/badge.svg)
+
 # Spot a Grandis
 
 This app is developed to help track the progress of the invasive species of 
