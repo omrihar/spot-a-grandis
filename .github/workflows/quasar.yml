@@ -16,6 +16,8 @@ jobs:
       - name: install quasar and build
         run: |
           yarn global add @quasar/cli
+          yarn
+          touch .env
           quasar build
         env:
           CI: true
