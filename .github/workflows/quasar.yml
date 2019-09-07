@@ -15,9 +15,8 @@ jobs:
           node-version: 12.x
       - name: install quasar and build
         run: |
-          yarn global add @quasar/cli
           yarn
           touch .env
-          quasar build
+          yarn build
         env:
           CI: true
